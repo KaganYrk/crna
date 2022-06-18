@@ -110,7 +110,7 @@ async function runAsync() {
         createProject({ name: response.name })
 
         APP_FILES.forEach(element => {
-            fs.mkdirSync(`${response.name}/app/${element}/index.${response.language==='Javascript'?"js":"ts"}`, { recursive: true })
+            fs.mkdirSync(`${response.name}/app/${element}`, { recursive: true })
         });
 
         installDependencies({ name: response.name, language: response.language, type: response.type })
