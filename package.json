@@ -1,0 +1,28 @@
+{
+  "name": "crna",
+  "version": "1.0.0",
+  "description": "tool for creating my react native projects",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KaganYrk/create-react-native-app.git"
+  },
+  "author": "kaganyrk",
+  "license": "ISC",
+  "bin": {
+    "crna": "./src/index.js"
+  },
+  "bugs": {
+    "url": "https://github.com/KaganYrk/create-react-native-app/issues"
+  },
+  "homepage": "https://github.com/KaganYrk/create-react-native-app#readme",
+  "devDependencies": {
+    "chalk": "^5.0.1",
+    "commander": "^9.3.0",
+    "prompts": "^2.4.2"
+  }
+}
