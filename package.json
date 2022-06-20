@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/KaganYrk/create-react-native-app.git"
+    "url": "https://github.com/KaganYrk/crna.git"
   },
   "author": "kaganyrk",
   "license": "ISC",
@@ -17,9 +17,9 @@
     "crna": "./src/index.js"
   },
   "bugs": {
-    "url": "https://github.com/KaganYrk/create-react-native-app/issues"
+    "url": "https://github.com/KaganYrk/crna/issues"
   },
-  "homepage": "https://github.com/KaganYrk/create-react-native-app#readme",
+  "homepage": "https://github.com/KaganYrk/crna#readme",
   "devDependencies": {
     "chalk": "^5.0.1",
     "commander": "^9.3.0",
