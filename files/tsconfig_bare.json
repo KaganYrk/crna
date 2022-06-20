@@ -1,12 +1,4 @@
-export const tsconfigExpo = {
-    "extends": "expo/tsconfig.base",
-    "compilerOptions": {
-        "jsx": "react",
-        "strict": true
-    }
-}
-
-export const tsconfigBare = {
+{
     "compilerOptions": {
         "target": "esnext",
         "lib": [

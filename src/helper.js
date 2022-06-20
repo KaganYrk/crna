@@ -1,4 +1,9 @@
+import { createRequire } from 'module';
+import ora from 'ora';
 
+const require = createRequire(import.meta.url);
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 
 export function validateName(name) {
   if (typeof name !== 'string' || name === '') {
@@ -18,5 +23,19 @@ export function navigateFolder(name) {
     console.log('chdir: ' + err);
   }
 
+}
+
+
+
+export async function runCommandAsync(props) {
+  const spinner = ora(props.message).start()
+  try {
+    await exec(props.cmd, { encoding: 'utf8', stdio: 'inherit' });
+    spinner.succeed()
+  } catch (e) {
+    console.error(e.stdout);
+    spinner.fail()
+    process.exit()
+  }
 }
 
