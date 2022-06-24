@@ -25,8 +25,6 @@ export function navigateFolder(name) {
 
 }
 
-
-
 export async function runCommandAsync(props) {
   const spinner = ora(props.message).start()
   try {
