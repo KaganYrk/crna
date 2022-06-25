@@ -2,10 +2,13 @@
   "name": "crna",
   "version": "1.0.0",
   "description": "tool for creating my react native projects",
+  "main": "build",
   "type": "module",
-  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:dev": "ncc build ./src/index.ts -o build/",
+    "build": "ncc build ./src/index.ts -o build/ --minify --no-cache --no-source-map-register",
+    "clean": "rimraf ./build/"
   },
   "repository": {
     "type": "git",
@@ -14,16 +17,20 @@
   "author": "kaganyrk",
   "license": "ISC",
   "bin": {
-    "crna": "./src/index.js"
+    "crna": "./build/index.js"
   },
   "bugs": {
     "url": "https://github.com/KaganYrk/crna/issues"
   },
   "homepage": "https://github.com/KaganYrk/crna#readme",
   "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/prompts": "^2.0.14",
+    "@vercel/ncc": "^0.34.0",
     "chalk": "^5.0.1",
     "commander": "^9.3.0",
     "ora": "^6.1.0",
-    "prompts": "^2.4.2"
+    "prompts": "^2.4.2",
+    "typescript": "^4.7.4"
   }
 }
