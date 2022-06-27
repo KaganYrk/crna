@@ -1,0 +1,31 @@
+{
+    "cli": {
+        "version": ">= 0.54.0"
+    },
+    "build": {
+        "production": {
+            "node": "16.13.1",
+            "releaseChannel": "production",
+            "android": {
+                "buildType": "app-bundle"
+            }
+        },
+        "preview": {
+            "distribution": "internal",
+            "releaseChannel": "preview",
+            "android": {
+                "buildType": "apk"
+            }
+        },
+        "development": {
+            "distribution": "internal",
+            "releaseChannel": "development",
+            "android": {
+                "buildType": "apk"
+            }
+        }
+    },
+    "submit": {
+        "production": {}
+    }
+}

@@ -8,16 +8,14 @@ import { Language, Project } from './types';
 import { COMMANDS, SUBFOLDERS } from './constants.js';
 import { navigateFolder, runCommandAsync, validateName } from './helper';
 import prompts, { PromptObject } from 'prompts';
+
 const tsconfigExpo = require('../files/tsconfig_expo.json');
 const tsconfigBare = require('../files/tsconfig_bare.json');
 const eslintrcJSON = require('../files/.eslintrc.json');
+const EASJSON = require('../files/eas.json');
 const packageJSON = require('../package.json');
 
-
-
 const program = new Command(packageJSON.name).version(packageJSON.version).parse()
-
-
 
 const createProject = async (
     fileName: string,
@@ -25,9 +23,9 @@ const createProject = async (
 
     if (projectType !== 'bare') {
         const updateExpo = `yarn global add expo-cli`
-        await runCommandAsync({ cmd: updateExpo, message: "Checking Expo CLI version" })
+        await runCommandAsync({ cmd: updateExpo, message: "Updating Expo CLI version" })
 
-        const cmd = `expo init ${fileName} --template ${projectType}`;
+        const cmd = `expo init ${fileName} --template ${projectType.includes("blank") ? "blank" : "bare-minimum"}`;
         await runCommandAsync({ cmd, message: "Creating Expo project" })
     } else {
         const cmd = `react-native init ${fileName} --version 0.68.2`; //currently, we are getting error on 0.69
@@ -43,8 +41,6 @@ const createSubfolders = async () => {
     ))
     Promise.all(promises).then(() => spinner.succeed())
 }
-
-
 
 const installDependencies = async (
     language: Language,
@@ -63,13 +59,11 @@ const installDependencies = async (
 
         await runCommandAsync({ cmd: typescript, message: `Installing ${chalk.cyan("Typescript")} packages` })
         const spinner = ora("Configuring tsconfig.json").start()
-        await configTsConfig(projectType).then(() => spinner.succeed(), () => spinner.fail())
-
+        await configTypescript(projectType).then(() => spinner.succeed(), () => spinner.fail())
     }
 }
 
-
-const configTsConfig = async (
+const configTypescript = async (
     projectType: Project
 ) => {
     if (projectType === "bare")
@@ -89,10 +83,19 @@ const configBabel = async (
 const configESLint = async (
     projectType: Project
 ) => {
+    const spinner = ora("Configuring ESLint").start()
     projectType === 'bare' && await fsPromises.unlink('.eslintrc.js');
     await fsPromises.writeFile('.eslintrc.json', JSON.stringify(eslintrcJSON, null, 4))
-    await fsPromises.writeFile('.eslintignore', '/node_modules')
+    await fsPromises.writeFile('.eslintignore', '/node_modules').then(() => spinner.succeed(), () => spinner.fail())
 }
+
+const configEAS = async (
+    projectType: Project
+) => {
+    const spinner = ora("Configuring Expo Application Service").start()
+    projectType !== 'bare' && await fsPromises.writeFile('eas.json', JSON.stringify(EASJSON, null, 4)).then(() => spinner.succeed(), () => spinner.fail())
+}
+
 
 const promptChain: PromptObject[] = [
     {
@@ -112,8 +115,8 @@ const promptChain: PromptObject[] = [
         name: 'projectType',
         message: 'Which template that you are going to use?',
         choices: [
-            { title: 'Expo Managed Workflow', value: 'expo-blank' },
-            { title: 'Expo Bare Workflow', value: 'bare-minimum' },
+            { title: 'Expo Managed Workflow', value: 'expo-managed' },
+            { title: 'Expo Bare Workflow', value: 'expo-bare' },
             { title: 'Bare', value: 'bare' },
         ],
     },
@@ -130,13 +133,11 @@ const promptChain: PromptObject[] = [
 
 ]
 
-
-
-
 async function runAsync() {
     (async () => {
 
         const { fileName, projectType, language } = await prompts(promptChain);
+
         await createProject(fileName, projectType).then(() => navigateFolder(fileName))
 
         await createSubfolders();
@@ -146,6 +147,8 @@ async function runAsync() {
         await configBabel(projectType)
 
         await configESLint(projectType)
+
+        await configEAS(projectType)
 
     })();
 }

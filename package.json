@@ -1,13 +1,14 @@
 {
   "name": "crna",
-  "version": "1.0.0",
-  "description": "tool for creating my react native projects",
+  "version": "0.1.2",
+  "description": "Tool for creating my react native projects",
   "main": "build",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:dev": "ncc build ./src/index.ts -o build/",
     "build": "ncc build ./src/index.ts -o build/ --minify --no-cache --no-source-map-register",
+    "start": "yarn clean && yarn build && node .",
     "clean": "rimraf ./build/"
   },
   "repository": {
@@ -31,6 +32,7 @@
     "commander": "^9.3.0",
     "ora": "^6.1.0",
     "prompts": "^2.4.2",
-    "typescript": "^4.7.4"
+    "typescript": "^4.2.4",
+    "update-check": "^1.5.4"
   }
 }

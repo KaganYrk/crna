@@ -3,7 +3,7 @@ import ora from "ora";
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
-export function validateName(fileName:string) {
+export function validateName(fileName: string) {
   if (typeof fileName !== 'string' || fileName === '') {
     return 'The project name can not be empty.';
   }
@@ -13,7 +13,7 @@ export function validateName(fileName:string) {
   return true;
 }
 
-export function navigateFolder(fileName:string) {
+export function navigateFolder(fileName: string) {
   try {
     process.chdir(`${process.cwd()}/${fileName}`);
   }
@@ -24,9 +24,9 @@ export function navigateFolder(fileName:string) {
 }
 
 export async function runCommandAsync(
-  props:{
-    message:string,
-    cmd:string
+  props: {
+    message: string,
+    cmd: string
   }) {
   const spinner = ora(props.message).start()
   try {
@@ -38,4 +38,6 @@ export async function runCommandAsync(
     process.exit()
   }
 }
+
+
 
