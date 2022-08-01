@@ -11,9 +11,11 @@ import prompts, { PromptObject } from 'prompts';
 
 const tsconfigExpo = require('../files/tsconfig_expo.json');
 const tsconfigBare = require('../files/tsconfig_bare.json');
-const eslintrcJSON = require('../files/.eslintrc.json');
+const eslintrcjsJSON = require('../files/.eslintrc_js.json');
+const eslintrctsJSON = require('../files/.eslintrc_ts.json');
 const EASJSON = require('../files/eas.json');
 const packageJSON = require('../package.json');
+
 
 const program = new Command(packageJSON.name)
     .version(packageJSON.version)
@@ -30,7 +32,7 @@ const createProject = async (
         const updateExpo = `yarn global add expo-cli`
         await runCommandAsync({ cmd: updateExpo, message: "Updating Expo CLI version" })
 
-        const cmd = `expo init ${fileName} --template ${template.includes("bare") ? "bare-minimum" : "blank"}`;
+        const cmd = `npx create-expo-app ${fileName} --template ${template.includes("bare") ? "bare-minimum" : "blank"}`;
         await runCommandAsync({ cmd, message: "Creating Expo project" })
     } else {
         const cmd = `react-native init ${fileName} --version 0.68.2`; //currently, we are getting error on 0.69
@@ -85,11 +87,13 @@ const configBabel = async (
 }
 
 const configESLint = async (
+    language: Language,
     template: Project
 ) => {
     const spinner = ora("Configuring ESLint").start()
     template === 'bare' && await fsPromises.unlink('.eslintrc.js');
-    await fsPromises.writeFile('.eslintrc.json', JSON.stringify(eslintrcJSON, null, 4))
+
+    language === 'javascript' ? await fsPromises.writeFile('.eslintrc.json', JSON.stringify(eslintrcjsJSON, null, 4)) : await fsPromises.writeFile('.eslintrc.json', JSON.stringify(eslintrctsJSON, null, 4))
     await fsPromises.writeFile('.eslintignore', '/node_modules').then(() => spinner.succeed(), () => spinner.fail())
 }
 
@@ -146,7 +150,7 @@ async function runAsync() {
     (async () => {
 
         const { fileName, template, language } = await prompts(promptChain);
-        
+
         await createProject(fileName, template).then(() => navigateFolder(fileName))
 
         await createSubfolders();
@@ -155,11 +159,11 @@ async function runAsync() {
 
         await configBabel(template)
 
-        await configESLint(template)
+        await configESLint(language, template)
 
         await configEAS(template)
 
-    })();
+    });
 }
 
 runAsync()
